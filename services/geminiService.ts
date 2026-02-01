@@ -1,30 +1,25 @@
 
-import { GoogleGenAI, Type } from "@google/genai";
+// We don't need the API key anymore!
+// We will use a pre-set list of romantic messages instead.
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+const LOVE_NOTES = [
+  "You mean the world to me! 🌎",
+  "My heart beats only for you! 💓",
+  "You are my favorite person! 🥰",
+  "Every day is better with you! ☀️",
+  "You are the love of my life! 💑",
+  "Forever isn't long enough! ⏳",
+  "You make my soul happy! ✨",
+  "I love you more than words! 📝",
+  "You are my greatest adventure! 🚀",
+  "My heart is yours, always! 🔒"
+];
 
 export const generateValentinePoem = async (): Promise<string> => {
-  try {
-    const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: "Write exactly one complete romantic sentence. It must be between 4 and 6 words long. Do not cut off. Example: You mean the world to me.",
-      config: {
-        maxOutputTokens: 100, // Increased to guarantee no cutoff
-        temperature: 0.6, // Lower temperature for more stable, complete sentences
-      }
-    });
-    
-    let text = response.text?.trim();
-    
-    // Safety check: If the text is empty, too short, or looks like a fragment (less than 3 words)
-    // we return a fallback to ensure the user never sees "You are..." again.
-    if (!text || text.length < 10 || text.split(/\s+/).length < 3) {
-        return "You are my forever love! ❤️";
-    }
-    
-    return text;
-  } catch (error) {
-    console.error("Gemini Error:", error);
-    return "You are my everything! ❤️";
-  }
+  // Simulate a short delay to make it feel like the app is "thinking"
+  await new Promise(resolve => setTimeout(resolve, 600));
+  
+  // Pick a random note from the list
+  const randomNote = LOVE_NOTES[Math.floor(Math.random() * LOVE_NOTES.length)];
+  return randomNote;
 };
