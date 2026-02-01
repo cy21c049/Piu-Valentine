@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import FloatingHearts from './components/FloatingHearts';
 import RunawayButton from './components/RunawayButton';
@@ -16,6 +15,7 @@ const App: React.FC = () => {
   const [poem, setPoem] = useState<string | null>(null);
   const [loadingPoem, setLoadingPoem] = useState(false);
   const [dragActive, setDragActive] = useState(false);
+  const [noCount, setNoCount] = useState(0);
   
   // Use the asset path as default, checking local storage for overrides
   const [customImage, setCustomImage] = useState<string | null>(() => {
@@ -89,6 +89,13 @@ const App: React.FC = () => {
     setPoem(generatedPoem);
     setLoadingPoem(false);
   };
+
+  const handleNoRun = () => {
+    setNoCount(prev => prev + 1);
+  };
+
+  // Grow the Yes button as the user tries to click No
+  const yesButtonScale = 1 + (noCount * 0.1);
 
   if (accepted) {
     return (
@@ -167,7 +174,10 @@ const App: React.FC = () => {
           </div>
 
           <button 
-            onClick={() => setAccepted(false)}
+            onClick={() => {
+              setAccepted(false);
+              setNoCount(0);
+            }}
             className="mt-6 px-6 py-2 bg-white text-pink-500 border border-pink-200 rounded-full hover:bg-pink-50 hover:border-pink-300 transition-all text-sm font-semibold shadow-sm"
           >
             Play Again ↺
@@ -200,14 +210,18 @@ const App: React.FC = () => {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-16 relative min-h-[80px]">
           <button
             onClick={handleYes}
-            className="group relative px-10 py-4 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold text-xl rounded-full shadow-[0_6px_0_rgb(157,23,77)] hover:shadow-[0_4px_0_rgb(157,23,77)] hover:translate-y-1 transition-all active:translate-y-[6px] active:shadow-none min-w-[160px] z-10"
+            style={{ 
+              transform: `scale(${yesButtonScale})`,
+              transformOrigin: 'center'
+            }}
+            className="group relative px-10 py-4 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold text-xl rounded-full shadow-[0_6px_0_rgb(157,23,77)] hover:shadow-[0_4px_0_rgb(157,23,77)] transition-all active:translate-y-[6px] active:shadow-none min-w-[160px] z-10"
           >
             YES!
             <span className="absolute -top-4 -right-4 text-2xl group-hover:animate-ping">💖</span>
             <span className="absolute inset-0 rounded-full bg-white opacity-0 group-hover:opacity-20 transition-opacity"></span>
           </button>
 
-          <RunawayButton label="No..." />
+          <RunawayButton label="No..." onRun={handleNoRun} />
         </div>
       </div>
 

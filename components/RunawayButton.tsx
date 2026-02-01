@@ -1,11 +1,11 @@
-
 import React, { useState, useCallback, useRef } from 'react';
 
 interface RunawayButtonProps {
   label: string;
+  onRun?: () => void;
 }
 
-const RunawayButton: React.FC<RunawayButtonProps> = ({ label }) => {
+const RunawayButton: React.FC<RunawayButtonProps> = ({ label, onRun }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -25,7 +25,11 @@ const RunawayButton: React.FC<RunawayButtonProps> = ({ label }) => {
       x: randomX - (window.innerWidth / 2), 
       y: randomY - (window.innerHeight / 2) 
     });
-  }, []);
+
+    if (onRun) {
+      onRun();
+    }
+  }, [onRun]);
 
   return (
     <button
